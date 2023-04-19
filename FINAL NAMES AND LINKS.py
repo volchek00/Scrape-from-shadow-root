@@ -1,23 +1,49 @@
-from selenium.common.exceptions import NoSuchElementException
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import urllib.request
-import os
-from PIL import Image
-import psycopg2
 import json
+import os
+import psycopg2
+import urllib.request
+from PIL import Image
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium import webdriver
+from pyshadow.main import Shadow
+from webdriver_manager.chrome import ChromeDriverManager
 
-# Create a new instance of the Firefox driver
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+
+# # Create a new instance of the Firefox driver
 driver = webdriver.Chrome()
 driver.implicitly_wait(20)
 
 
-# Navigate to the first page
+# Navigate to the page that contains the iframe
 driver.get("https://www.sreality.cz/hledani/prodej/domy")
+
+
+# Below line creates instance of ActionChains class 
+action = ActionChains(driver)
+# Below line locates and stores an element which is outside the shadow-root
+element_outside_shadow = driver.find_element(By.XPATH, "//div[@class='szn-cmp-dialog-container']")
+# Below 2 lines clicks on the browser at an offset of co-ordinates x=5 and y=5
+action.move_to_element_with_offset(element_outside_shadow, 5, 5)
+action.click()
+# Below 2 lines presses TAB key 9 times so that pointer moves to "Souhlasím" button and presses ENTER key once
+action.send_keys(Keys.TAB * 9).perform()
+action.send_keys(Keys.ENTER).perform()
+
+
 
 count = 0
 images = []
@@ -103,6 +129,8 @@ conn.commit()
 cursor.close()
 conn.close()
 
+
+# print the database:
 
 # conn = psycopg2.connect(
 #     host="localhost",
