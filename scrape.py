@@ -15,13 +15,16 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+
+from pathlib import Path
+PROJECT_PATH  = Path(__file__).parent
 
 # # Create a new instance of the Firefox driver
 driver = webdriver.Chrome()
@@ -58,7 +61,7 @@ if not os.path.exists(foldername):
     os.makedirs(foldername)
 
 
-while count < 21:
+while count < 500:
     # Get all the text-wrap elements on the page
     elements = driver.find_elements(By.CLASS_NAME, "text-wrap")
     houses_elements = driver.find_elements(By.CSS_SELECTOR, "div[class='_2xzMRvpz7TDA2twKCXTS4R']")
@@ -76,7 +79,7 @@ while count < 21:
         data.append(data_dict)
 
     for house in houses_elements:
-        if count >= 21:
+        if count >= 500:
             break
         # Get the link element that contains "detail/prodej/"
         link_element = house.find_element(By.CSS_SELECTOR, "div._15Md1MuBeW62jbm5iL0XqR a[href*='detail/prodej/']")
@@ -130,25 +133,24 @@ cursor.close()
 conn.close()
 
 
-# print the database:
 
-# conn = psycopg2.connect(
-#     host="localhost",
-#     database="sreality_db",
-#     user="postgres",
-#     password="password",
-#     port="5555"
-# )
+conn = psycopg2.connect(
+    host="localhost",
+    database="sreality_db",
+    user="postgres",
+    password="password",
+    port="5555"
+)
 
-# cursor = conn.cursor()
+cursor = conn.cursor()
 
-# select_query = "SELECT * FROM sreality"
-# cursor.execute(select_query)
+select_query = "SELECT * FROM sreality"
+cursor.execute(select_query)
 
-# rows = cursor.fetchall()
+rows = cursor.fetchall()
 
-# for row in rows:
-#     print(row)
+for row in rows:
+    print(row)
 
-# cursor.close()
-# conn.close()
+cursor.close()
+conn.close()

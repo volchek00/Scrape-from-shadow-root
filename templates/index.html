@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sreality Ads</title>
+</head>
+<body>
+    {% for item in data %}
+        <h2>{{ item.title }}</h2>
+        <img src="{{ item.image }}" alt="Ad Image">
+    {% endfor %}
+</body>
+</html>
+
