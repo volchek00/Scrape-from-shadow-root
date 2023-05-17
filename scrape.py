@@ -55,12 +55,6 @@ data = []
 h2 = []
 links = []
 
-# Create the folder if it doesn't exist
-foldername = "50_img"
-if not os.path.exists(foldername):
-    os.makedirs(foldername)
-
-
 while count < 500:
     # Get all the text-wrap elements on the page
     elements = driver.find_elements(By.CLASS_NAME, "text-wrap")
@@ -99,13 +93,34 @@ table_name = "sreality"
 name_column = "Names"
 image_column = "Images"
 
-conn = psycopg2.connect(
-    host="localhost",
-    database="sreality_db",
-    user="postgres",
-    password="password",
-    port="5555"
-)
+try:
+    conn = psycopg2.connect(
+        host="host.docker.internal",
+        database="sreality_db",
+        user="postgres",
+        password="password",
+        port="5555"
+    )
+except psycopg2.errors.DuplicateDatabase:
+    conn = psycopg2.connect(
+        host="host.docker.internal",
+        # db
+        user="postgres",
+        password="password",
+        port="5555"
+    )
+    conn.autocommit = True
+    cursor = conn.cursor()
+    cursor.execute("CREATE DATABASE sreality_db")
+    cursor.close()
+    conn.close()
+    conn = psycopg2.connect(
+        host="host.docker.internal",
+        database="sreality_db",
+        user="postgres",
+        password="password",
+        port="5555"
+    )
 
 cursor = conn.cursor()
 cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
@@ -132,25 +147,22 @@ conn.commit()
 cursor.close()
 conn.close()
 
-
-
 conn = psycopg2.connect(
-    host="localhost",
+    host="host.docker.internal",
     database="sreality_db",
     user="postgres",
     password="password",
     port="5555"
 )
 
-cursor = conn.cursor()
+# cursor = conn.cursor()
+# select_query = "SELECT * FROM sreality"
+# cursor.execute(select_query)
 
-select_query = "SELECT * FROM sreality"
-cursor.execute(select_query)
+# rows = cursor.fetchall()
 
-rows = cursor.fetchall()
+# for row in rows:
+#     print(row)
 
-for row in rows:
-    print(row)
-
-cursor.close()
-conn.close()
+# cursor.close()
+# conn.close()

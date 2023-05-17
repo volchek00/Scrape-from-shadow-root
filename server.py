@@ -12,7 +12,7 @@ image_column = "Images"
 @app.route("/")
 def index():
     conn = psycopg2.connect(
-        host="localhost",
+        host="host.docker.internal",
         database="sreality_db",
         user="postgres",
         password="password",
@@ -30,4 +30,4 @@ def index():
     return render_template("index.html", data=data)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=8080, debug = True)
